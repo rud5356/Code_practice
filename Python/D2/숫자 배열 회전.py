@@ -1,5 +1,4 @@
 import sys
-import copy
 sys.stdin = open("D:/Code_practice/Python/D2/input_숫자배열회전.txt", "r")
 
 T = int(input())
