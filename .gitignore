@@ -27,3 +27,10 @@ Python/.idea/misc.xml
 Python/D2/input_Base64Decoder.txt
 Python/D2/input_백만장자프로젝트.txt
 Python/D3/input_몬스터사냥.txt
+*.xml
+*.jar
+*.pom
+Python/kakao/메뉴리뉴얼.py
+*.ipynb
+*.xml
+*.bin
