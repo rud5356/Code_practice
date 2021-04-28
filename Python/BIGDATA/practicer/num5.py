@@ -1,6 +1,4 @@
-from selenium import webdriver
 import csv
-import time
 import requests
 from bs4 import BeautifulSoup
 import urllib.request

@@ -2,6 +2,7 @@ from konlpy.tag import *
 from tqdm import tqdm
 import re
 import pandas as pd
+import numpy as np
 
 # 고속도로제거디렉터리와 파일
 file_path1 = 'D://practice/yuna/'
@@ -91,18 +92,24 @@ if __name__ == '__main__':
     # 도로교통 데이터를 읽어들인다.
     df = pd.read_csv(file_path2 + start_file, names=['지역', 'ID', '날짜', '내용', '형태'], encoding='cp949')
     df1 = df.dropna()
+
     # 고속도로 데이터를 제거한다.
     df_v2 = remove_highway(df1)
+
     # 고속도로 데이터 제거 파일 저장
     save_highway_data(df_v2)
+
     # 토큰화
     processed_data = tokenize(df_v2)
-    # 레이블
-    content_data = content(df_v2)
     df_v3 = pd.DataFrame(
         {'지역': df_v2['지역'], 'ID': df_v2['ID'], '날짜': df_v2['날짜'], '내용': processed_data, '형태': df_v2['형태']})
+
+    # Null값 제거
+    df_v3['내용'].replace('', np.nan, inplace=True)
+    df_V4 = df_v3.dropna()
+
     # 날짜순 정렬
-    df_sort = df_v3.sort_values(by='날짜').reset_index(drop=True)
-    df_finished = df_sort.dropna()
+    df_finished = df_V4.sort_values(by='날짜').reset_index(drop=True)
+
     # 토큰 분리한 데이터를 저장
     save_processed_data(df_finished)
