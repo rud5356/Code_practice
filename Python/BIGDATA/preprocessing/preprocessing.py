@@ -7,10 +7,10 @@ import random
 
 file_path1='D://practice/yuna/'
 file_path2='D://practice/3/'
-start_file = 'chungbuk.csv'
-middle1_file = 'tokenized_data_word_chungbuk.csv'
-middle2_file = 'tokenized_data_chungbuk.csv'
-final_file = 'clean_data_chungbuk.csv'
+start_file = 'a.csv'
+middle1_file = 'tokenized_data2.csv'
+middle2_file = 'tokenized_data2.csv'
+final_file = 'clean_data3.csv'
 
 def clean_text(text):
     """ 한글, 영문, 숫자만 남기고 제거한다. :param text: :return: """

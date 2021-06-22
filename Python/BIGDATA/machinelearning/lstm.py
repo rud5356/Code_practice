@@ -6,13 +6,10 @@ from keras_preprocessing.text import Tokenizer
 import csv
 
 file_path = 'D://practice/yuna/'
-start_file = 'data.csv'
-middle_file = 'preprocessing.csv'
 final_file = 'clean_data.csv'
 categories = ['사고', '공사', '기상', '정체', '기타', '행사']
 
 total_data = pd.read_csv(file_path + final_file, names=['content', 'content_type'], encoding='cp949')
-
 train, test = train_test_split(total_data, random_state=30, test_size=0.2)
 
 X_train = train.content
@@ -118,8 +115,8 @@ for i in range(len(test_label)):
 y_train = np.array(y_train)
 y_test = np.array(y_test)
 
-from keras.layers import Embedding, Dense, LSTM
-from keras.models import Sequential
+from tensorflow.keras.layers import Embedding, Dense, LSTM
+from tensorflow.keras.models import Sequential
 from keras_preprocessing.sequence import pad_sequences
 max_len = 40
 

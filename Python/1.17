@@ -1,0 +1,34 @@
+Collecting package metadata (current_repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: C:\Users\rud53\anaconda3
+
+  added / updated specs:
+    - numpy
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    ca-certificates-2021.4.13  |       haa95532_1         115 KB
+    conda-4.10.1               |   py37haa95532_1         2.9 MB
+    ------------------------------------------------------------
+                                           Total:         3.0 MB
+
+The following packages will be UPDATED:
+
+  ca-certificates                      2021.1.19-haa95532_1 --> 2021.4.13-haa95532_1
+  conda                               4.10.0-py37haa95532_0 --> 4.10.1-py37haa95532_1
+
+
+Proceed ([y]/n)? 
+
+Downloading and Extracting Packages
+conda-4.10.1         | 2.9 MB    |            |   0% conda-4.10.1         | 2.9 MB    | #2         |  13% conda-4.10.1         | 2.9 MB    | ####4      |  45% conda-4.10.1         | 2.9 MB    | ########1  |  81% conda-4.10.1         | 2.9 MB    | ########## | 100% 
+ca-certificates-2021 | 115 KB    |            |   0% ca-certificates-2021 | 115 KB    | ########## | 100% 
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... done

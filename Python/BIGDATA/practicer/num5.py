@@ -6,11 +6,20 @@ import datetime
 import pandas as pd
 import schedule
 import json
+import urllib3
+urllib3.disable_warnings()
 
+# 카테고리 별 상세 주소 값
 page = ['A04', 'A01', 'A02', 'A03', 'A05', 'A06']
+
+# 카테고리 별 이름
 pageName = ['accident', 'trafficJam', 'construction', 'event', 'weather', 'etc']
-file_path_1 = 'D://practice/4/{}.csv'
-file_path_2 = 'D://practice/4/message.csv'
+
+# 저장할 경로
+file_path_1 = 'D://practice/6/{}.csv'
+file_path_2 = 'D://practice/6/message.csv'
+
+
 api_key = "529be81770b6430cbacf313407f0308d"
 get_url_mes = 'https://www.tbn.or.kr/traffic/tr_textinfo.tbn?BOARD_ID=T005&area_code=12'
 get_url_others = 'http://www.tbn.or.kr/traffic/tr_accident.tbn?page_code=0&BOARD_ID=T006&nowUrl=%2Ftraffic%2Ftr_accident.tbn&traffic_type={}'
@@ -29,14 +38,12 @@ def crowling():
 
     df = pd.json_normalize(result)
     df.to_csv(file_name, encoding='cp949')
-    # print(df)
-
 
 schedule.every().day.at("23:30").do(crowling)
 
 
 def mes_crowling():
-    req = requests.get(get_url_mes)
+    req = requests.get(get_url_mes, verify=False)
     html = req.text
     soup = BeautifulSoup(html, 'html.parser')
     f2 = open(file_path_2, 'r', encoding='cp949')
@@ -55,7 +62,7 @@ def mes_crowling():
             columnlist.append(columns[i].text)
         if line[-1].find("\""):
             line[-1] = line[-1].replace("\"", "")
-        # print(line, '\n', columnlist)
+        # print(line, columnlist)
         if line != columnlist:
             csvWriter.writerow(columnlist)
             # print(columnlist)
@@ -75,16 +82,24 @@ def other_crowling():
             line = line[-1].split(",", 4)
         f1 = open(file_path_1.format(pageName[i]), 'a', encoding='cp949', newline="\n")
         csvWriter = csv.writer(f1)
-        req = requests.get(get_url_others.format(page[i]))
+        req = requests.get(get_url_others.format(page[i]), verify=False)
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')
         try:
-            cl = soup.find('div', class_="box").get_text().split("\n")
+            cl = soup.find('div', class_="box").get_text().strip().split("\n")
+            for c in range(len(cl)):
+                cl[c] = cl[c].strip()
+                cl[c] = cl[c].replace('\t', '')
+                cl[c] = cl[c].replace('\r', '')
+                if cl[c] == "<" or cl[c] == ">":
+                    cl[c] = ""
+            cl = [v for v in cl if v]
             cllist = list(filter(None, cl))
+            # print(cllist)
+            # print(line)
             line[4] = line[4].replace("\"", "")
             if line != cllist:
                 csvWriter.writerow(cllist)
-                # print(cllist)
         except:
             print(pageName[i] + " except발생 ")
             print(datetime.datetime.now())

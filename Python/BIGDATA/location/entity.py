@@ -13,7 +13,13 @@ API_KEY = '9e76c797-dafc-42ef-8f3b-4daf41a7e30d'
 
 initialize(ETRI='LATEST')
 labeler = RoleLabeler(API.ETRI, etri_key=API_KEY)
-local = ['OG', 'AF_ROAD', 'AF_BUILDING', 'LCP_COUNTY', 'LC_OTHERS','LCG_RIVER','OGG_EDUCATION','OGG_ECONOMY','OGG_RELIGION','LC_TOUR']
+LC = ['LC_OTHERS', 'LCP_COUNTRY', 'LCP_PROVINCE', 'LCP_COUNTY', 'LCP_CITY', 'LCP_CAPITALCITY', 'LCG_RIVER', 'LCG_OCEAN',
+      'LCG_BAY', 'LCG_MOUNTAIN', 'LCG_ISLAND', 'LCG_CONTINENT', 'LC_TOUR', 'LC_SPACE']
+OG = ['OG_OTHERS', 'OGG_ECONOMY', 'OGG_EDUCATION', 'OGG_MILITARY', 'OGG_MEDIA', 'OGG_SPORTS', 'OGG_ART', 'OGG_MEDICINE',
+      'OGG_RELIGION', 'OGG_SCIENCE', 'OGG_LIBRARY', 'OGG_LAW', 'OGG_POLITICS', 'OGG_FOOD', 'OGG_HOTEL']
+AF = ['AF_ROAD', 'AF_BUILDING']
+
+all_local = LC + OG + AF
 for i in total_data['content']:
     local_info = []
     try:
@@ -30,12 +36,12 @@ for i in total_data['content']:
         if len(entities) > 0:
             for entity in entities:
                 # print(entity)
-                if entity.getFineLabel() in local:
+                if entity.getFineLabel() in all_local:
                     for j in ori:
                         if entity.getSurface() in j:
                             local_info.append(j)
         #print(local_info)
-        with open(file_path + 'point_chungbuk_v2.csv', 'a', newline='', encoding='cp949') as f:
+        with open(file_path + 'point_chungbuk_v3.csv', 'a', newline='', encoding='cp949') as f:
             writer = csv.DictWriter(f, fieldnames=['지역명', 'x', 'y', 'TorF'])
             if len(local_info)>0:
                 try:
