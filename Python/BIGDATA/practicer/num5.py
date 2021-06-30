@@ -7,39 +7,17 @@ import pandas as pd
 import schedule
 import json
 import urllib3
+
 urllib3.disable_warnings()
-
-# 카테고리 별 상세 주소 값
-page = ['A04', 'A01', 'A02', 'A03', 'A05', 'A06']
-
-# 카테고리 별 이름
-pageName = ['accident', 'trafficJam', 'construction', 'event', 'weather', 'etc']
-
-# 저장할 경로
-file_path_1 = 'D://practice/6/{}.csv'
-file_path_2 = 'D://practice/6/message.csv'
-
-
-api_key = "529be81770b6430cbacf313407f0308d"
-get_url_mes = 'https://www.tbn.or.kr/traffic/tr_textinfo.tbn?BOARD_ID=T005&area_code=12'
-get_url_others = 'http://www.tbn.or.kr/traffic/tr_accident.tbn?page_code=0&BOARD_ID=T006&nowUrl=%2Ftraffic%2Ftr_accident.tbn&traffic_type={}'
-get_url_its = 'https://openapi.its.go.kr:9443/eventInfo?apiKey={}&type=its&eventType=all&minX=126.800000&maxX=127.890000&minY=34.900000&maxY=35.100000&getType=json'
 
 
 def crowling():
-    today_1 = datetime.datetime.today().month
-    today_2 = datetime.datetime.today().day
-
     response = urllib.request.urlopen(get_url_its.format(api_key))
-    file_name = 'D://practice/yuna/ITS/ITS_{0}_{1}.csv'.format(today_1, today_2)
-
+    file_name = f'D://practice/yuna/ITS/ITS_{today_1}_{today_2}.csv'
     json_object = json.load(response)
     result = json_object["body"]["items"]
-
     df = pd.json_normalize(result)
     df.to_csv(file_name, encoding='cp949')
-
-schedule.every().day.at("23:30").do(crowling)
 
 
 def mes_crowling():
@@ -60,8 +38,7 @@ def mes_crowling():
         columnlist = []
         for i in range(4):
             columnlist.append(columns[i].text)
-        if line[-1].find("\""):
-            line[-1] = line[-1].replace("\"", "")
+        line[-1] = line[-1].replace('\"', '')
         # print(line, columnlist)
         if line != columnlist:
             csvWriter.writerow(columnlist)
@@ -74,13 +51,13 @@ def mes_crowling():
 
 def other_crowling():
     for i in range(len(page)):
-        f1 = open(file_path_1.format(pageName[i]), 'r', encoding='cp949')
+        f1 = open(file_path_1.format(today_1, pageName[i]), 'r', encoding='cp949')
         line = f1.readlines()
         lines = list(map(lambda s: s.strip(), line))
         line = [v for v in lines if v]
         if line != '\n':
             line = line[-1].split(",", 4)
-        f1 = open(file_path_1.format(pageName[i]), 'a', encoding='cp949', newline="\n")
+        f1 = open(file_path_1.format(today_1, pageName[i]), 'a', encoding='cp949', newline="\n")
         csvWriter = csv.writer(f1)
         req = requests.get(get_url_others.format(page[i]), verify=False)
         html = req.text
@@ -106,10 +83,27 @@ def other_crowling():
         f1.close()
 
 
-while (True):
-    mes_crowling()
-    other_crowling()
-    try:
-        schedule.run_pending()
-    except:
-        print('schedule오류')
+if __name__ == '__main__':
+    today_1 = datetime.datetime.today().month
+    today_2 = datetime.datetime.today().day
+    # 카테고리 별 상세 주소 값
+    page = ['A04', 'A01', 'A02', 'A03', 'A05', 'A06']
+    # 카테고리 별 이름
+    pageName = ['accident', 'trafficJam', 'construction', 'event', 'weather', 'etc']
+    # 저장할 경로
+    file_path_1 = 'D://practice/{}/{}.csv'
+    file_path_2 = f'D://practice/{today_1}/message.csv'
+    # 도로 교통 api
+    api_key = "529be81770b6430cbacf313407f0308d"
+    # 각 홈페이지 주소
+    get_url_mes = 'https://www.tbn.or.kr/traffic/tr_textinfo.tbn?BOARD_ID=T005&area_code=12'
+    get_url_others = 'http://www.tbn.or.kr/traffic/tr_accident.tbn?page_code=0&BOARD_ID=T006&nowUrl=%2Ftraffic%2Ftr_accident.tbn&traffic_type={}'
+    get_url_its = 'https://openapi.its.go.kr:9443/eventInfo?apiKey={}&type=its&eventType=all&minX=126.800000&maxX=127.890000&minY=34.900000&maxY=35.100000&getType=json'
+    schedule.every().day.at("23:30").do(crowling)
+    while (True):
+        mes_crowling()
+        other_crowling()
+        try:
+            schedule.run_pending()
+        except:
+            print('schedule오류')

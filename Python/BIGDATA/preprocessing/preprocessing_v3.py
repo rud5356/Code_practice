@@ -26,22 +26,6 @@ def clean_text(text):
 def remove_highway(data):
     data['내용'] = data['내용'].apply(clean_text)
     dataResult = data[~data['내용'].str.contains("나들목|고속도로|분기점", na=False, case=False)]
-    # highway = "서울외곽순환고속도로 경부고속도로 고창담양고속도로 " \
-    #           "광주대구고속도로 남해고속도로 당진영덕고속도로 대전남부순환고속도로 " \
-    #           "동해고속도로 무안광주고속도로 서울양양고속도로 서울외곽순환고속도로 서천공주고속도로 " \
-    #           "서해안고속도로 순천완주고속도로 영동고속도로 익산포항고속도로 제2경인고속도로 제2중부고속도로 " \
-    #           "중부고속도로 중부내륙고속도로 중부내륙선지고속도로 중앙고속도로 통영대전고속통영대전고속도로 " \
-    #           "통영대전선고속도로 평택제천고속도로 호남고속도로 호남선지고속도로 경부고속도로 경인고속도로 " \
-    #           "남해고속도로 남해제1지고속도로 남해제2지고속도로 동해고속도로 부산외곽고속도로 " \
-    #           "부산외곽순환고속도로 부산울산고속도로 울산고속도로 중앙선지고속도로 나들목 분기점"
-    # highway = highway.split(' ')
-    # for i in df['내용']:
-    #     data = clean_text(i.replace('\n', '').strip())
-    #     data = data.split(' ')
-    #     for j in data:
-    #         if j in highway:
-    #             df = df[df.내용 != i]
-    # return df
     return dataResult
 
 
